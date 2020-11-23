@@ -296,7 +296,23 @@ public class Gleitpunktzahl {
 		 * ist.
 		 * Achten Sie auf Sonderfaelle!
 		 */
-	}
+		int mask = -2147483648
+		if(this.mantisse != 0 && this.exponent != 0 && this.vorzeichen != 0 || this.exponent != -1 ){
+			while(this.mantisse & mask != mask){
+				this.mantisse = this.mantisse << 1;
+				this.exponent += 1;
+			}
+		}
+		   String binary = Integer.toBinaryString(this.mantisse);
+   
+   
+		   if (binary.charAt(this.sizeMantisse-2 == 1) && binary.substring(this.sizeMantisse - 1).contains("1")) {
+			   this.mantisse = Integer.parseInt(binary, 2) + 1;
+		   }
+		  
+	   }
+		}
+		 
 
 	/**
 	 * denormalisiert die betragsmaessig goessere Zahl, so dass die Exponenten
