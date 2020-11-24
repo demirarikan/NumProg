@@ -305,17 +305,17 @@ public class Gleitpunktzahl {
 		}
 		   String binary = Integer.toBinaryString(this.mantisse);
    
-   
 		   if (binary.charAt(this.sizeMantisse-2 == 1) && binary.substring(this.sizeMantisse - 1).contains("1")) {
 			   this.mantisse = Integer.parseInt(binary, 2) + 1;
 		   }
 		  
 	   }
 		}
+		
 		 
 
 	/**
-	 * denormalisiert die betragsmaessig goessere Zahl, so dass die Exponenten
+	 * denormalisiert die betragsmaessig groessere Zahl, so dass die Exponenten
 	 * von a und b gleich sind. Die Mantissen beider Zahlen werden entsprechend
 	 * erweitert. Denormalisieren wird fuer add und sub benoetigt.
 	 */
@@ -323,6 +323,27 @@ public class Gleitpunktzahl {
 		/*
 		 * TODO: hier ist die Operation denormalisiere zu implementieren.
 		 */
+		if(a.compareAbsTo(b)>=1 || a.compareAbsTo(b)==0){
+			if(a.exponent>b.exponent){
+				int fark = a.exponent - b.exponent;
+				a.mantisse = a.mantisse >> fark;
+				a.exponent -= fark;
+			} else {
+				int fark2 = a.exponent - b.exponent;
+				a.mantisse = a.exponent << fark2;
+				a.exponent -= fark2;
+			}
+		} else if (a.compareAbsTo(b)<=-1){
+			if(b.exponent>a.exponent){
+				int fark = b.exponent - a.exponent;
+				b.mantisse = b.mantisse >> fark;
+				b.exponent -= fark;
+			} else {
+				int fark2 = b.exponent - a.exponent;
+				b.mantisse = b.exponent << fark2;
+				b.exponent -= fark2;
+			}
+		}
 	}
 
 	/**
@@ -337,6 +358,11 @@ public class Gleitpunktzahl {
 		 * Funktionen normalisiere und denormalisiere.
 		 * Achten Sie auf Sonderfaelle!
 		 */
+		 if(checkForInfinite(r)==true){
+
+		 }
+		 denormalisiere(this, r);
+		 int add = this.mantisse + r.mantisse;
 
 		return new Gleitpunktzahl();
 	}
@@ -380,7 +406,30 @@ public class Gleitpunktzahl {
 	 */
 	public void setNaN() {
 		this.vorzeichen = false;
-		this.exponent = maxExponent;
+		this.exponent = maxExponent; 
 		this.mantisse = 1;
+	}
+
+	private static boolean checkForNull(Gleitpunktzahl a){
+		if((!a.vorzeichen)&&(a.exponent==0)&&(a.mantisse==0)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	private static boolean checkForInfinite(Gleitpunktzahl a){
+		if(a.exponent == maxExponent) && (this.mantisse == 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	private static boolean checkForNaN(Gleitpunktzahl a){
+		if(a.vorzeichen == false) && (a.exponent == maxExponent) && (a.mantisse == 1){
+			return true;
+		}else {
+			return false;
+		}
 	}
 }
